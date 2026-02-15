@@ -7,8 +7,9 @@
  * - User interaction actions
  * - Integration with Entity layer
  */
-// eslint-disable-next-line import/order
-import { UserDto } from '@/common'
+import type { UserDto } from '@/common'
+import type { UsersListStateHttp } from '@/stores/state/UsersListStateHttp'
+
 // Create mock entity with getters - BEFORE importing the module that uses it
 const createMockQuery = () => ({
     get data() {
@@ -61,18 +62,20 @@ jest.mock('@/stores/entities/UsersEntityHttp', () => ({
     },
 }))
 
-// Import AFTER mocking
-// eslint-disable-next-line import/order
-import { UsersListStateHttp } from '@/stores/state/UsersListStateHttp'
-
 // Mock window.confirm
 global.confirm = jest.fn(() => true)
 
 describe('UsersListStateHttp', () => {
+    let UsersListStateHttpClass: typeof UsersListStateHttp
     let state: UsersListStateHttp
 
+    beforeAll(async () => {
+        const module = await import('@/stores/state/UsersListStateHttp')
+        UsersListStateHttpClass = module.UsersListStateHttp
+    })
+
     beforeEach(() => {
-        state = new UsersListStateHttp()
+        state = new UsersListStateHttpClass()
         mockGetAllUsersQuery._data = undefined
         mockGetAllUsersQuery._isLoading = false
         mockGetAllUsersQuery._isFetching = false

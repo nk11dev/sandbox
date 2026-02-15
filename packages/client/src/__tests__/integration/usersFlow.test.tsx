@@ -112,8 +112,10 @@ describe('Users Flow Integration Test', () => {
 
     afterEach(() => {
         queryClient.clear()
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(webSocketApi as any)._resetHandlers()
+        const wsApiWithHelpers = webSocketApi as typeof webSocketApi & {
+            _resetHandlers: () => void
+        }
+        wsApiWithHelpers._resetHandlers()
     })
 
     describe('Scenario: Create user via HTTP', () => {
@@ -177,8 +179,10 @@ describe('Users Flow Integration Test', () => {
             })
 
             // Step 7: Simulate WebSocket event broadcast
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ;(webSocketApi as any)._triggerEvent('users:created', {})
+            const wsApiWithHelpers = webSocketApi as typeof webSocketApi & {
+                _triggerEvent: (event: string, data: unknown) => void
+            }
+            wsApiWithHelpers._triggerEvent('users:created', {})
 
             // Step 8: Mock refetch for WebSocket
             ;(webSocketApi.emit as jest.Mock).mockResolvedValueOnce({

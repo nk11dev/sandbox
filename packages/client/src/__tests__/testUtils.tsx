@@ -4,6 +4,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, RenderOptions } from '@testing-library/react'
+import { observer } from 'mobx-react'
 import { ReactElement, ReactNode } from 'react'
 
 /**

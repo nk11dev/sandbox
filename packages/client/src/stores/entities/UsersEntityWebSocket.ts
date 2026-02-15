@@ -14,15 +14,19 @@ import { MobxMutation, MobxQuery, queryClient, webSocketApi } from '@/services'
  * - Automatic cache invalidation on socket events
  * - Real-time updates across multiple clients
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type GetAllUsersQuery = MobxQuery<UserDto[], Error, UserDto[], UserDto[], any>
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GetAllUsersQuery = MobxQuery<
+    UserDto[], 
+    Error, 
+    UserDto[], 
+    UserDto[], 
+    readonly ['users', 'websocket']
+>
 type GetUserQuery = MobxQuery<
     UserDto | undefined, 
     Error, 
     UserDto | undefined, 
     UserDto | undefined, 
-    any
+    readonly ['user', 'websocket']
 >
 
 class UsersEntityWebSocket {

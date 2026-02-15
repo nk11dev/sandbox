@@ -36,21 +36,30 @@ export const Modal = observer(function Modal({ isOpen, onClose, title, children 
         return null
     }
 
+    const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (e.target === e.currentTarget) {
+            onClose()
+        }
+    }
+
+    const handleOverlayKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' && e.target === e.currentTarget) {
+            onClose()
+        }
+    }
+
     return (
         <div 
             className="modal-overlay" 
-            onClick={onClose}
-            onKeyDown={(e) => e.key === 'Enter' && onClose()}
+            onClick={handleOverlayClick}
+            onKeyDown={handleOverlayKeyDown}
             role="button"
             tabIndex={0}
         >
-            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <div 
                 className="modal" 
-                onClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => e.stopPropagation()}
                 role="dialog"
-                tabIndex={-1}
+                aria-modal="true"
             >
                 <div className="modal__header">
                     <h2 className="modal__title">{title}</h2>

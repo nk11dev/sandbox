@@ -14,19 +14,23 @@ import { MobxMutation, MobxQuery, queryClient, webSocketApi } from '@/services'
  * - Automatic cache invalidation on socket events (Case 6)
  * - Real-time updates across multiple clients
  */
-type GetAllGroupsQuery = MobxQuery<GroupDto[], Error, GroupDto[], GroupDto[], any>
+type GetAllGroupsQuery = MobxQuery<
+    GroupDto[], 
+    Error, 
+    GroupDto[], 
+    GroupDto[], 
+    readonly ['groups', 'websocket']
+>
 type GetGroupQuery = MobxQuery<
     GroupDto | undefined, 
     Error, 
     GroupDto | undefined, 
     GroupDto | undefined, 
-    any
+    readonly ['group', 'websocket']
 >
 
 class GroupsEntityWebSocket {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @observable getAllGroupsQuery: GetAllGroupsQuery
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @observable getGroupQuery: GetGroupQuery
     @observable createGroupMutation: MobxMutation<GroupDto, Error, Omit<GroupDto, 'id'>>
     @observable updateGroupMutation: MobxMutation<GroupDto, Error, { id: GroupId; updates: Partial<Omit<GroupDto, 'id'>> }>

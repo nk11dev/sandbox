@@ -14,15 +14,19 @@ import { httpApi, MobxMutation, MobxQuery, queryClient } from '@/services'
  * - Automatic cache invalidation after mutations
  * - TypeScript type safety throughout the chain
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type GetAllUsersQuery = MobxQuery<UserDto[], Error, UserDto[], UserDto[], any>
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GetAllUsersQuery = MobxQuery<
+    UserDto[], 
+    Error, 
+    UserDto[], 
+    UserDto[], 
+    readonly ['users', 'http']
+>
 type GetUserQuery = MobxQuery<
     UserDto | undefined, 
     Error, 
     UserDto | undefined, 
     UserDto | undefined, 
-    any
+    readonly ['user', 'http']
 >
 
 class UsersEntityHttp {

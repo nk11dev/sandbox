@@ -19,7 +19,7 @@ import './UsersList.css'
  * 
  * **Case 3: Universal Component with Multiple Transports**
  */
-interface IUsersListState {
+export interface IUsersListState {
     users: UserDto[]
     isLoading: boolean
     isFetching: boolean

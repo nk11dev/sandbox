@@ -14,19 +14,23 @@ import { httpApi, MobxMutation, MobxQuery, queryClient } from '@/services'
  * - Cache updates after mutations (Case 5)
  * - Cache invalidation for related queries (Case 6)
  */
-type GetAllGroupsQuery = MobxQuery<GroupDto[], Error, GroupDto[], GroupDto[], any>
+type GetAllGroupsQuery = MobxQuery<
+    GroupDto[], 
+    Error, 
+    GroupDto[], 
+    GroupDto[], 
+    readonly ['groups', 'http']
+>
 type GetGroupQuery = MobxQuery<
     GroupDto | undefined, 
     Error, 
     GroupDto | undefined, 
     GroupDto | undefined, 
-    any
+    readonly ['group', 'http']
 >
 
 class GroupsEntityHttp {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @observable getAllGroupsQuery: GetAllGroupsQuery
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @observable getGroupQuery: GetGroupQuery
     @observable createGroupMutation: MobxMutation<GroupDto, Error, Omit<GroupDto, 'id'>>
     @observable updateGroupMutation: MobxMutation<GroupDto, Error, { id: GroupId; updates: Partial<Omit<GroupDto, 'id'>> }>

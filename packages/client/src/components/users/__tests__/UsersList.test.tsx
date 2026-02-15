@@ -14,12 +14,11 @@ import React from 'react'
 
 import { renderWithProviders } from '@/__tests__/testUtils'
 import { UserDto } from '@/common'
-import { UsersList } from '@/components/users/UsersList'
+import { IUsersListState, UsersList } from '@/components/users/UsersList'
 import { UsersListStateHttp } from '@/stores/state/UsersListStateHttp'
 
 describe('UsersList Component', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let mockState: any
+    let mockState: IUsersListState
 
     beforeEach(() => {
         mockState = {

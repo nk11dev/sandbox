@@ -14,15 +14,19 @@ import { httpApi, MobxMutation, MobxQuery, queryClient } from '@/services'
  * - Automatic cache updates after mutations (Case 5)
  * - Cache invalidation for related queries (Case 6)
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type GetAllRolesQuery = MobxQuery<RoleDto[], Error, RoleDto[], RoleDto[], any>
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GetAllRolesQuery = MobxQuery<
+    RoleDto[], 
+    Error, 
+    RoleDto[], 
+    RoleDto[], 
+    readonly ['roles', 'http']
+>
 type GetRoleQuery = MobxQuery<
     RoleDto | undefined, 
     Error, 
     RoleDto | undefined, 
     RoleDto | undefined, 
-    any
+    readonly ['role', 'http']
 >
 
 class RolesEntityHttp {
