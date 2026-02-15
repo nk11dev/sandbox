@@ -60,8 +60,8 @@ export class GroupProfileState {
         return (
             this.formData.name !== this.group.name ||
             this.formData.description !== (this.group.description || '') ||
-            JSON.stringify(this.formData.roles.sort()) !==
-                JSON.stringify(this.group.roles.sort())
+            JSON.stringify([...this.formData.roles].sort()) !==
+                JSON.stringify([...this.group.roles].sort())
         )
     }
 
