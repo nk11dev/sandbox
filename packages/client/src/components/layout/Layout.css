@@ -1,0 +1,11 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.layout__content {
+    flex: 1;
+    padding: var(--spacing-xl);
+    overflow-y: auto;
+}

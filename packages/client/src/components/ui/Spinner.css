@@ -1,0 +1,20 @@
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
+.spinner__circle {
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spinner-rotate 0.8s linear infinite;
+}
+
+@keyframes spinner-rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}

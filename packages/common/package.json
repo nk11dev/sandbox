@@ -1,0 +1,19 @@
+{
+    "name": "@sandbox/common",
+    "version": "1.0.0",
+    "description": "Common types and utilities for sandbox",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
+    "scripts": {
+        "lint": "eslint src/",
+        "lint:fix": "eslint src/ --fix",
+        "ts:check": "tsc --noEmit"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "7.15.0",
+        "@typescript-eslint/parser": "7.15.0",
+        "eslint": "8.57.0",
+        "typescript": "5.4.2"
+    }
+}

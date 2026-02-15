@@ -1,0 +1,17 @@
+[
+    {
+        "id": 3001,
+        "name": "Administration",
+        "roles": [2001, 2003, 2004]
+    },
+    {
+        "id": 3002,
+        "name": "Marketing",
+        "roles": [2001, 2002]
+    },
+    {
+        "id": 3003,
+        "name": "Sales",
+        "roles": [2001, 2003]
+    }
+]

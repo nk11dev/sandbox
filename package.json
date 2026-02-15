@@ -1,0 +1,40 @@
+{
+    "name": "sandbox",
+    "version": "1.0.0",
+    "description": "Fullstack sandbox with MobX + TanStack Query integration",
+    "private": true,
+    "workspaces": [
+        "packages/common",
+        "packages/server",
+        "packages/client"
+    ],
+    "scripts": {
+        "install:all": "npm install && npm install --workspace=packages/common && npm install --workspace=packages/server && npm install --workspace=packages/client",
+        "dev:client": "npm run dev --workspace=packages/client",
+        "dev:server": "npm run dev --workspace=packages/server",
+        "build": "npm run build:client && npm run build:server",
+        "build:client": "npm run build --workspace=packages/client",
+        "build:server": "npm run build --workspace=packages/server",
+        "start": "npm run start --workspace=packages/server",
+        "prod": "npm run build && npm run start",
+        "lint": "npm run lint --workspace=packages/common && npm run lint --workspace=packages/server && npm run lint --workspace=packages/client",
+        "lint:fix": "npm run lint:fix --workspace=packages/common && npm run lint:fix --workspace=packages/server && npm run lint:fix --workspace=packages/client",
+        "ts:check": "npm run ts:check --workspace=packages/common && npm run ts:check --workspace=packages/server && npm run ts:check --workspace=packages/client",
+        "test": "npm run test --workspace=packages/client"
+    },
+    "keywords": [
+        "sandbox",
+        "mobx",
+        "tanstack-query",
+        "websocket",
+        "http",
+        "react",
+        "express"
+    ],
+    "author": "",
+    "license": "MIT",
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=9.0.0"
+    }
+}

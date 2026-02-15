@@ -1,0 +1,15 @@
+.users-page {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.users-page__block {
+    min-width: 0;
+}
+
+@media (max-width: 1200px) {
+    .users-page {
+        grid-template-columns: 1fr;
+    }
+}

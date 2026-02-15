@@ -1,0 +1,18 @@
+[
+    {
+        "id": 2001,
+        "name": "User"
+    },
+    {
+        "id": 2002,
+        "name": "Modeler"
+    },
+    {
+        "id": 2003,
+        "name": "Admin"
+    },
+    {
+        "id": 2004,
+        "name": "Service Admin"
+    }
+]
