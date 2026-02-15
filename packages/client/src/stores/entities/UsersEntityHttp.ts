@@ -14,7 +14,9 @@ import { httpApi, MobxMutation, MobxQuery, queryClient } from '@/services'
  * - Automatic cache invalidation after mutations
  * - TypeScript type safety throughout the chain
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GetAllUsersQuery = MobxQuery<UserDto[], Error, UserDto[], UserDto[], any>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GetUserQuery = MobxQuery<
     UserDto | undefined, 
     Error, 
@@ -24,9 +26,7 @@ type GetUserQuery = MobxQuery<
 >
 
 class UsersEntityHttp {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @observable getAllUsersQuery: GetAllUsersQuery
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @observable getUserQuery: GetUserQuery
     @observable createUserMutation: MobxMutation<UserDto, Error, Omit<UserDto, 'id'>>
     @observable updateUserMutation: MobxMutation<UserDto, Error, { id: UserId; updates: Partial<Omit<UserDto, 'id'>> }>

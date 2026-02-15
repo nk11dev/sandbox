@@ -24,6 +24,10 @@ import { QueryClient } from '@tanstack/react-query'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 
+import {
+    createTestQueryClient,
+    renderWithProviders,
+} from '@/__tests__/testUtils'
 import { UserDto } from '@/common'
 import { UsersList } from '@/components/users/UsersList'
 import { httpApi } from '@/services/http/HttpApi'
@@ -32,10 +36,6 @@ import { usersEntityHttp } from '@/stores/entities/UsersEntityHttp'
 import { usersEntityWebSocket } from '@/stores/entities/UsersEntityWebSocket'
 import { UsersListStateHttp } from '@/stores/state/UsersListStateHttp'
 import { UsersListStateWebSocket } from '@/stores/state/UsersListStateWebSocket'
-import {
-    createTestQueryClient,
-    renderWithProviders,
-} from '@/__tests__/testUtils'
 
 // Mock HTTP API
 jest.mock('@/services/http/HttpApi', () => ({
@@ -49,12 +49,13 @@ jest.mock('@/services/http/HttpApi', () => ({
 
 // Mock WebSocket API
 jest.mock('@/services/websocket/WebSocketApi', () => {
-    let eventHandlers: Record<string, Function[]> = {}
+    type EventHandler = (data: unknown) => void
+    let eventHandlers: Record<string, EventHandler[]> = {}
 
     return {
         webSocketApi: {
             emit: jest.fn(),
-            on: jest.fn((event: string, handler: Function) => {
+            on: jest.fn((event: string, handler: EventHandler) => {
                 if (!eventHandlers[event]) {
                     eventHandlers[event] = []
                 }
@@ -111,6 +112,7 @@ describe('Users Flow Integration Test', () => {
 
     afterEach(() => {
         queryClient.clear()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(webSocketApi as any)._resetHandlers()
     })
 
@@ -121,7 +123,7 @@ describe('Users Flow Integration Test', () => {
             await usersEntityWebSocket.getAllUsersQuery.refetch()
 
             // Step 2: Render both blocks
-            const { container } = renderWithProviders(
+            renderWithProviders(
                 <div>
                     <UsersList state={httpState} title="Users by HTTP" />
                     <UsersList state={wsState} title="Users by WebSocket" />
@@ -175,6 +177,7 @@ describe('Users Flow Integration Test', () => {
             })
 
             // Step 7: Simulate WebSocket event broadcast
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ;(webSocketApi as any)._triggerEvent('users:created', {})
 
             // Step 8: Mock refetch for WebSocket

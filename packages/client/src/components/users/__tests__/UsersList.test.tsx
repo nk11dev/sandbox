@@ -12,12 +12,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 
+import { renderWithProviders } from '@/__tests__/testUtils'
 import { UserDto } from '@/common'
 import { UsersList } from '@/components/users/UsersList'
 import { UsersListStateHttp } from '@/stores/state/UsersListStateHttp'
-import { renderWithProviders } from '@/__tests__/testUtils'
 
 describe('UsersList Component', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let mockState: any
 
     beforeEach(() => {

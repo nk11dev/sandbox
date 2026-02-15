@@ -33,7 +33,7 @@ interface TestProvidersProps {
     queryClient?: QueryClient
 }
 
-export function TestProviders({
+export const TestProviders = observer(function TestProviders({
     children,
     queryClient = createTestQueryClient(),
 }: TestProvidersProps) {
@@ -42,7 +42,7 @@ export function TestProviders({
             {children}
         </QueryClientProvider>
     )
-}
+})
 
 /**
  * Custom render function that wraps components with necessary providers.

@@ -7,9 +7,8 @@
  * - User interaction actions
  * - Integration with Entity layer
  */
-
+// eslint-disable-next-line import/order
 import { UserDto } from '@/common'
-
 // Create mock entity with getters - BEFORE importing the module that uses it
 const createMockQuery = () => ({
     get data() {
@@ -63,6 +62,7 @@ jest.mock('@/stores/entities/UsersEntityHttp', () => ({
 }))
 
 // Import AFTER mocking
+// eslint-disable-next-line import/order
 import { UsersListStateHttp } from '@/stores/state/UsersListStateHttp'
 
 // Mock window.confirm
@@ -226,7 +226,7 @@ describe('UsersListStateHttp', () => {
         })
 
         it('should not delete user if not confirmed', async () => {
-            ;(global.confirm as jest.Mock).mockReturnValue(false)
+            (global.confirm as jest.Mock).mockReturnValue(false)
 
             await state.deleteUser(1)
 

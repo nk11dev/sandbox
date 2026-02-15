@@ -11,10 +11,10 @@
 
 import { QueryClient } from '@tanstack/react-query'
 
+import { createTestQueryClient, waitForAsync } from '@/__tests__/testUtils'
 import { UserDto } from '@/common'
 import { httpApi } from '@/services'
 import { UsersEntityHttp } from '@/stores/entities/UsersEntityHttp'
-import { createTestQueryClient, waitForAsync } from '@/__tests__/testUtils'
 
 // Mock the HTTP API
 jest.mock('@/services/http/HttpApi', () => ({
@@ -63,7 +63,7 @@ describe('UsersEntityHttp', () => {
         })
 
         it('should handle fetch error', async () => {
-            ;(httpApi.get as jest.Mock).mockResolvedValueOnce({
+            (httpApi.get as jest.Mock).mockResolvedValueOnce({
                 success: false,
                 error: 'Failed to fetch users',
             })
@@ -116,7 +116,7 @@ describe('UsersEntityHttp', () => {
         })
 
         it('should handle creation error', async () => {
-            ;(httpApi.post as jest.Mock).mockResolvedValueOnce({
+            (httpApi.post as jest.Mock).mockResolvedValueOnce({
                 success: false,
                 error: 'Failed to create user',
             })
@@ -180,7 +180,7 @@ describe('UsersEntityHttp', () => {
 
     describe('deleteUserMutation', () => {
         it('should delete user and update cache', async () => {
-            ;(httpApi.delete as jest.Mock).mockResolvedValueOnce({
+            (httpApi.delete as jest.Mock).mockResolvedValueOnce({
                 success: true,
                 data: { id: 1 },
             })
@@ -216,7 +216,7 @@ describe('UsersEntityHttp', () => {
         })
 
         it('should expose query state reactively', async () => {
-            ;(httpApi.get as jest.Mock).mockResolvedValueOnce({
+            (httpApi.get as jest.Mock).mockResolvedValueOnce({
                 success: true,
                 data: [],
             })

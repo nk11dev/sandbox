@@ -11,10 +11,10 @@
 
 import { QueryClient } from '@tanstack/react-query'
 
+import { createTestQueryClient, waitForAsync } from '@/__tests__/testUtils'
 import { UserDto } from '@/common'
 import { webSocketApi } from '@/services'
 import { UsersEntityWebSocket } from '@/stores/entities/UsersEntityWebSocket'
-import { createTestQueryClient, waitForAsync } from '@/__tests__/testUtils'
 
 // Mock the WebSocket API
 jest.mock('@/services/websocket/WebSocketApi', () => ({
@@ -26,9 +26,10 @@ jest.mock('@/services/websocket/WebSocketApi', () => ({
 }))
 
 describe('UsersEntityWebSocket', () => {
+    type EventHandler = (data: unknown) => void
     let entity: UsersEntityWebSocket
     let queryClient: QueryClient
-    let eventHandlers: Record<string, Function>
+    let eventHandlers: Record<string, EventHandler>
 
     beforeEach(() => {
         queryClient = createTestQueryClient()
@@ -36,7 +37,7 @@ describe('UsersEntityWebSocket', () => {
 
         // Mock webSocketApi.on to capture event handlers
         ;(webSocketApi.on as jest.Mock).mockImplementation(
-            (event: string, handler: Function) => {
+            (event: string, handler: EventHandler) => {
                 eventHandlers[event] = handler
                 return jest.fn() // unsubscribe function
             }
@@ -72,7 +73,7 @@ describe('UsersEntityWebSocket', () => {
         })
 
         it('should handle fetch error', async () => {
-            ;(webSocketApi.emit as jest.Mock).mockResolvedValueOnce({
+            (webSocketApi.emit as jest.Mock).mockResolvedValueOnce({
                 success: false,
                 error: 'Failed to fetch users',
             })
@@ -223,7 +224,7 @@ describe('UsersEntityWebSocket', () => {
 
     describe('deleteUserMutation', () => {
         it('should delete user via WebSocket', async () => {
-            ;(webSocketApi.emit as jest.Mock).mockResolvedValueOnce({
+            (webSocketApi.emit as jest.Mock).mockResolvedValueOnce({
                 success: true,
                 data: { id: 1 },
             })
