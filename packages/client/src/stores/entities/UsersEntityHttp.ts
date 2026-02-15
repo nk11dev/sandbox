@@ -175,3 +175,6 @@ class UsersEntityHttp {
 }
 
 export const usersEntityHttp = new UsersEntityHttp()
+
+// Export class for testing
+export { UsersEntityHttp }

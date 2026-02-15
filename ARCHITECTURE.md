@@ -543,44 +543,151 @@ const count = state.users.length // Not reactive!
 
 ## Testing Strategies
 
+### Test Suite Overview
+
+The project includes comprehensive tests covering all integration patterns and use cases.
+
+**Test Statistics:**
+- Entity Store Tests: ~20 tests per entity (HTTP + WebSocket)
+- State Store Tests: ~18 tests per state  
+- Component Tests: ~15 tests per component
+- Integration Tests: ~10 end-to-end scenarios
+
 ### 1. Entity Store Tests
 
-Test query and mutation functions independently:
+Test query and mutation functions independently with mocked API:
 
 ```typescript
+// Test HTTP transport
 test('creates user successfully', async () => {
-    const entity = new UsersEntityHttp()
-    await entity.createUserMutation.mutate({ name: 'Test', email: 'test@test.com' })
+    const mockUser = { id: 1, name: 'Test', email: 'test@test.com' }
+    
+    ;(httpApi.post as jest.Mock).mockResolvedValueOnce({
+        success: true,
+        data: mockUser,
+    })
+    
+    await entity.createUserMutation.mutate({
+        name: 'Test',
+        email: 'test@test.com'
+    })
+    
     expect(entity.createUserMutation.isSuccess).toBe(true)
+    expect(httpApi.post).toHaveBeenCalledWith('/users', expect.any(Object))
+})
+
+// Test WebSocket event subscriptions
+test('invalidates cache on users:created event', () => {
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries')
+    
+    // Trigger WebSocket event
+    eventHandlers['users:created']({})
+    
+    expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: ['users', 'websocket']
+    })
 })
 ```
 
 ### 2. State Store Tests
 
-Test business logic and UI state:
+Test business logic and UI state with mocked entities:
 
 ```typescript
 test('opens create modal', () => {
     const state = new UsersListStateHttp()
     state.openCreateModal()
+    
     expect(state.isModalOpen).toBe(true)
     expect(state.editingUser).toBeNull()
+    expect(state.formData).toEqual({ name: '', email: '' })
+})
+
+test('computes isMutating from multiple mutations', () => {
+    mockCreateUserMutation._isPending = true
+    expect(state.isMutating).toBe(true)
+    
+    mockCreateUserMutation._isPending = false
+    mockUpdateUserMutation._isPending = true
+    expect(state.isMutating).toBe(true)
 })
 ```
 
 ### 3. Component Tests
 
-Test with mocked state:
+Test with mocked state using `@testing-library/react`:
 
 ```typescript
 test('renders user list', () => {
     const mockState = {
         users: [{ id: 1, name: 'Test', email: 'test@test.com' }],
         isLoading: false,
+        isFetching: false,
+        isMutating: false,
+        error: null,
         // ... other required properties
     }
-    render(<UsersList state={mockState} title="Test" />)
+    
+    renderWithProviders(<UsersList state={mockState} title="Test" />)
+    
     expect(screen.getByText('Test')).toBeInTheDocument()
+    expect(screen.getByText('test@test.com')).toBeInTheDocument()
+})
+
+test('calls openEditModal when Edit button clicked', () => {
+    const user = { id: 1, name: 'User 1', email: 'user1@test.com' }
+    mockState.users = [user]
+    
+    renderWithProviders(<UsersList state={mockState} title="Test" />)
+    
+    const editButton = screen.getAllByText('Edit')[0]
+    fireEvent.click(editButton)
+    
+    expect(mockState.openEditModal).toHaveBeenCalledWith(user)
+})
+```
+
+### 4. Integration Tests
+
+Test complete user flows across all layers:
+
+```typescript
+test('Create user via HTTP updates both HTTP and WebSocket caches', async () => {
+    // Step 1: Load initial data
+    await usersEntityHttp.getAllUsersQuery.refetch()
+    await usersEntityWebSocket.getAllUsersQuery.refetch()
+    
+    // Step 2: Render both blocks
+    renderWithProviders(
+        <div>
+            <UsersList state={httpState} title="Users by HTTP" />
+            <UsersList state={wsState} title="Users by WebSocket" />
+        </div>
+    )
+    
+    // Step 3: Create user via HTTP
+    const newUser = { id: 3, name: 'New User', email: 'new@test.com' }
+    ;(httpApi.post as jest.Mock).mockResolvedValueOnce({
+        success: true,
+        data: newUser
+    })
+    
+    fireEvent.click(screen.getAllByText('Create User')[0])
+    // ... fill form and submit
+    
+    // Step 4: Verify HTTP cache updated
+    await waitFor(() => {
+        const cache = queryClient.getQueryData(['users', 'http'])
+        expect(cache).toContainEqual(newUser)
+    })
+    
+    // Step 5: Simulate WebSocket event
+    ;(webSocketApi as any)._triggerEvent('users:created', {})
+    
+    // Step 6: Verify WebSocket cache invalidated and refetched
+    await waitFor(() => {
+        expect(webSocketApi.emit).toHaveBeenCalledWith('users:getAll')
+    })
 })
 ```
 

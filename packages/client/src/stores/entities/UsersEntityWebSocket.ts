@@ -238,3 +238,6 @@ class UsersEntityWebSocket {
 }
 
 export const usersEntityWebSocket = new UsersEntityWebSocket()
+
+// Export class for testing
+export { UsersEntityWebSocket }

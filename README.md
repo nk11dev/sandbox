@@ -217,6 +217,48 @@ npm run prod            # Build and start production
 npm run lint            # Lint all packages
 npm run lint:fix        # Lint and fix all packages
 npm run ts:check        # TypeScript check all packages
+npm run test            # Run tests (client package)
+```
+
+## 🧪 Testing
+
+The project includes comprehensive tests for all integration patterns:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+### Test Coverage
+
+- ✅ **Entity Stores**: HTTP and WebSocket transport layers
+- ✅ **State Stores**: UI state management and business logic
+- ✅ **Components**: Transport-agnostic UI components
+- ✅ **Integration**: End-to-end scenarios testing all 6 cases
+
+### Test Structure
+
+```
+packages/client/src/
+├── __tests__/
+│   ├── testUtils.tsx           # Test helpers and mocks
+│   └── integration/            # Integration tests
+│       └── usersFlow.test.tsx
+├── stores/
+│   ├── entities/__tests__/    # Entity store tests
+│   │   ├── UsersEntityHttp.test.ts
+│   │   └── UsersEntityWebSocket.test.ts
+│   └── state/__tests__/       # State store tests
+│       └── UsersListStateHttp.test.ts
+└── components/
+    └── users/__tests__/       # Component tests
+        └── UsersList.test.tsx
 ```
 
 ## 🌐 Environment Variables
