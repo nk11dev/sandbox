@@ -1,0 +1,64 @@
+---
+alwaysApply: true
+---
+# Full Development Workflow
+
+## 1. Planning
+- Analyze the task in detail and possible implementation approaches
+- Highlight architectural forks, their features, pros and cons
+- Justify architectural choices
+- Describe detailed implementation plan point by point
+- Provide brief illustrative code examples for key implementation details
+- Draw file structure
+- Finish with: "Plan ready. Confirm for implementation or specify corrections."
+
+## 2. Plan Confirmation
+- Wait for explicit user confirmation ("OK", "approved", "implement")
+- For corrections — update plan and request re-confirmation
+- Do not proceed to implementation without confirmation
+
+## 3. Code Implementation
+- Follow user requirements to the last letter
+- Fully implement all required functionality
+- Leave no TODOs, placeholders, or missing fragments
+- Respect TypeScript/ESLint configuration when writing code
+- Implement error handling and edge cases for user interaction
+- Implement logging of key application points
+
+## 4. Test Coverage
+- Create unit tests for new functions/components (Jest)
+- Cover all public methods and key scenarios with tests
+- Add integration tests for API endpoints
+- Tests must pass: npm test
+
+## 5. Testing
+- Verify project build works in production and development modes
+- Run TypeScript check: npx tsc --noEmit
+- Run ESLint check: npx eslint src/ --fix
+- Test all functionality and user scenarios
+- Check console for warnings and errors
+- All checks must pass without errors or warnings
+
+## 6. Documentation
+- Use JSDoc for documentation
+  - Use complete sentences with proper punctuation and syntax
+  - Make descriptions clear and concise
+- Document:
+  - Overall application architecture and key details
+  - All public functions, classes, methods, and interfaces
+  - Add examples when necessary
+
+## 7. GitHub Commit
+- Create meaningful commit message following Conventional Commits:
+  - feat: new functionality
+  - fix: bug fixes
+  - docs: documentation
+  - chore: minor changes
+- List completed work in commit description
+- Execute: git add . && git commit -m "feat: ..."
+
+## 8. Project Documentation Update
+- Update .cursor/rules/sandbox-project/01-project-overview.mdc
+- Update README.md with new usage instructions
+- Mark task status as completed in .cursor/rules/sandbox-tasks/
+- Proceed to next task only after completing all stages

@@ -1,0 +1,54 @@
+---
+alwaysApply: true
+---
+# Best Practices
+
+## Core Code Principles
+
+- Write clean, understandable, maintainable, and scalable code
+- Write in **TypeScript** with proper type and interface definitions
+- **Logically structure files**
+- Follow principles:
+  - **SOLID**
+  - **DRY**
+  - **KISS**
+- Apply layout patterns for creating modular, reusable components
+
+## TypeScript
+
+- Use **strict mode** in TypeScript
+- For object structures (especially when extending), **prefer interfaces over types**
+- Apply **generics** to functions, actions, and fragments where type flexibility is needed
+- Use TypeScript utility types (**Partial, Pick, Omit**) for cleaner, reusable code
+- **Avoid `any` or `unknown`** unless absolutely necessary. Instead, find type definitions in codebase, import library typing, or add packages for library typing
+- **Avoid type assertions** with `as` or `!` unless absolutely necessary
+
+## React and JSX
+
+- Use **functional components** with **TypeScript interface prop typing**
+- Use **named exports** for components
+
+## MobX
+
+- Use **`makeObservable`**
+- Use decorators **`@observable`, `@action`, and `reaction`** where needed in MobX classes
+- **Do NOT use `makeAutoObservable`**
+
+## Functions
+
+- Write **short functions with single responsibility** (less than 20 statements)
+- Use **early returns** for better readability
+- For **more than 2 arguments** — use **object signature**
+- **Declare types** for input arguments and output when using object signatures
+
+## Styling
+
+- Include **CSS reset** for identical styles across browsers
+- **Minimal but neat and beautiful**
+- **Font: Roboto**
+
+## Performance and Optimization
+
+- **Prevent memory leaks**
+- Use **caching mechanisms**
+- Use **React mechanisms** for component performance optimization

@@ -1,0 +1,50 @@
+---
+alwaysApply: true
+---
+# Naming Conventions
+
+## Core Naming Principles
+
+- Use **PascalCase** for:
+  - Classes
+  - Components  
+  - Types, interfaces, and enums
+
+- Use **camelCase** for:
+  - Variables
+  - Functions
+  - Methods
+  - Hooks
+  - Properties
+  - Props
+
+- Use **UPPERCASE** for:
+  - Environment variables
+  - Constants
+  - Global configurations
+
+- Avoid magic numbers — always define constants
+
+## Naming Patterns
+
+- Event handlers prefix with **"handle"**:
+  - `handleClick`
+  - `handleSubmit`
+
+- Logical variables prefix with verbs:
+  - `isLoading`
+  - `hasError`
+  - `canSubmit`
+
+- Custom hooks prefix with **"use"**:
+  - `useAuth`
+  - `useForm`
+
+- Use full words instead of abbreviations, except:
+  - `err` (error)
+  - `req` (request)
+  - `res` (response)
+  - `props` (properties)
+  - `ref` (reference)
+
+- Start every function name with a verb

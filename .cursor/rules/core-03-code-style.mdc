@@ -1,0 +1,45 @@
+---
+alwaysApply: true
+---
+# Code Style
+
+## Core Formatting Principles
+
+- Use **4-space indentation** throughout all code (including JSX)
+- Add spaces after commas
+- **No trailing whitespace** at end of lines
+- Every file must end with a newline (`\n`)
+- **No semicolons** at end of statements
+- Use **single quotes** for strings (except when escaping requires otherwise)
+- **Maximum line length: 100 characters**
+
+## Syntax and Constructs
+
+- Arrow functions: **always wrap arguments in parentheses** `(x) => x`
+- Multi-line ternary operators: **always break across lines**
+- **Always use curly braces** for `if` statements
+- `else` statements must be on **same line as closing brace**
+
+## React and JSX
+
+- JSX attributes: **double quotes only**
+- **One prop per line** in JSX elements
+- Childless components/tags must be **self-closing**: `<Foo />`
+
+## Imports and Dependencies
+
+- **Internal paths** (utils/, global/, types/) before relative paths (./, ../)
+- **Strict import order**:
+  1. External packages
+  2. Internal packages (@/*)
+  3. Relative paths (./, ../)
+  4. CSS/styles (last)
+- **Blank line between import groups**
+- **Alphabetize imports within each group**
+- **Exclude unused imports**
+
+## Prohibitions and Restrictions
+
+- **Exclude unused variables**
+- **Exclude unused imports**
+- **Exclude empty constructors**

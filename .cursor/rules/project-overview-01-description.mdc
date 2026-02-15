@@ -1,0 +1,16 @@
+---
+alwaysApply: true
+---
+# Project Overview: sandbox
+
+## Project Purpose
+
+- Project name **"sandbox"** — fullstack sandbox with minimalistic and clean codebase
+- Designed for **practicing approaches** on specific tasks and **reusing** obtained technical solutions on real projects with identical tech stack and dependency versions
+
+## Current State
+
+Project is currently **almost empty**:
+- **README.md** exists (must be updated after each task implementation to keep current)
+- **.gitignore** exists (can be edited if needed)
+- **MIT license** file exists (**do not touch**)
