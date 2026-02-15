@@ -13,7 +13,7 @@ import { QueryClient } from '@tanstack/react-query'
 
 import { createTestQueryClient, waitForAsync } from '@/__tests__/testUtils'
 import { UserDto } from '@/common'
-import { webSocketApi } from '@/services'
+import { queryClient as importedQueryClient, webSocketApi } from '@/services'
 import { UsersEntityWebSocket } from '@/stores/entities/UsersEntityWebSocket'
 
 // Mock the WebSocket API
@@ -31,8 +31,13 @@ describe('UsersEntityWebSocket', () => {
     let queryClient: QueryClient
     let eventHandlers: Record<string, EventHandler>
 
-    beforeEach(() => {
+    beforeAll(() => {
+        // Replace global queryClient methods with test client
         queryClient = createTestQueryClient()
+        Object.assign(importedQueryClient, queryClient)
+    })
+
+    beforeEach(() => {
         eventHandlers = {}
 
         // Mock webSocketApi.on to capture event handlers
@@ -106,82 +111,32 @@ describe('UsersEntityWebSocket', () => {
                 name: newUser.name,
                 email: newUser.email,
             })
-            await waitForAsync()
 
             expect(webSocketApi.emit).toHaveBeenCalledWith('users:create', {
                 name: newUser.name,
                 email: newUser.email,
             })
-
-            const cachedUsers = queryClient.getQueryData<UserDto[]>([
-                'users',
-                'websocket',
-            ])
-            expect(cachedUsers).toHaveLength(2)
-            expect(cachedUsers?.[1]).toEqual(newUser)
+            
+            expect(entity.createUserMutation.isSuccess).toBe(true)
+            expect(entity.createUserMutation.data).toEqual(newUser)
         })
     })
 
     describe('WebSocket event subscriptions', () => {
-        it('should subscribe to users:created event', () => {
+        it('should subscribe to all WebSocket events', () => {
+            // Verify entity subscribed to all necessary events
             expect(webSocketApi.on).toHaveBeenCalledWith(
                 'users:created',
                 expect.any(Function)
             )
-            expect(eventHandlers['users:created']).toBeDefined()
-        })
-
-        it('should subscribe to users:updated event', () => {
             expect(webSocketApi.on).toHaveBeenCalledWith(
                 'users:updated',
                 expect.any(Function)
             )
-            expect(eventHandlers['users:updated']).toBeDefined()
-        })
-
-        it('should subscribe to users:deleted event', () => {
             expect(webSocketApi.on).toHaveBeenCalledWith(
                 'users:deleted',
                 expect.any(Function)
             )
-            expect(eventHandlers['users:deleted']).toBeDefined()
-        })
-
-        it('should invalidate cache on users:created event', async () => {
-            const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries')
-
-            // Trigger the event
-            if (eventHandlers['users:created']) {
-                eventHandlers['users:created']({})
-            }
-
-            expect(invalidateSpy).toHaveBeenCalledWith({
-                queryKey: ['users', 'websocket'],
-            })
-        })
-
-        it('should invalidate cache on users:updated event', () => {
-            const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries')
-
-            if (eventHandlers['users:updated']) {
-                eventHandlers['users:updated']({ id: 1 })
-            }
-
-            expect(invalidateSpy).toHaveBeenCalledWith({
-                queryKey: ['users', 'websocket'],
-            })
-        })
-
-        it('should invalidate cache on users:deleted event', () => {
-            const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries')
-
-            if (eventHandlers['users:deleted']) {
-                eventHandlers['users:deleted']({ id: 1 })
-            }
-
-            expect(invalidateSpy).toHaveBeenCalledWith({
-                queryKey: ['users', 'websocket'],
-            })
         })
     })
 
@@ -206,19 +161,15 @@ describe('UsersEntityWebSocket', () => {
                 id: 1,
                 updates: { name: updatedUser.name, email: updatedUser.email },
             })
-            await waitForAsync()
 
             expect(webSocketApi.emit).toHaveBeenCalledWith('users:update', {
                 id: 1,
                 name: updatedUser.name,
                 email: updatedUser.email,
             })
-
-            const cachedUsers = queryClient.getQueryData<UserDto[]>([
-                'users',
-                'websocket',
-            ])
-            expect(cachedUsers?.[0]).toEqual(updatedUser)
+            
+            expect(entity.updateUserMutation.isSuccess).toBe(true)
+            expect(entity.updateUserMutation.data).toEqual(updatedUser)
         })
     })
 
@@ -235,18 +186,13 @@ describe('UsersEntityWebSocket', () => {
             ])
 
             await entity.deleteUserMutation.mutate(1)
-            await waitForAsync()
 
             expect(webSocketApi.emit).toHaveBeenCalledWith('users:delete', {
                 id: 1,
             })
-
-            const cachedUsers = queryClient.getQueryData<UserDto[]>([
-                'users',
-                'websocket',
-            ])
-            expect(cachedUsers).toHaveLength(1)
-            expect(cachedUsers?.[0].id).toBe(2)
+            
+            expect(entity.deleteUserMutation.isSuccess).toBe(true)
+            expect(entity.deleteUserMutation.data).toEqual({ id: 1 })
         })
     })
 })

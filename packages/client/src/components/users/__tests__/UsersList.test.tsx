@@ -90,13 +90,13 @@ describe('UsersList Component', () => {
             mockState.isFetching = true
             mockState.isLoading = false
 
-            renderWithProviders(
+            const { container } = renderWithProviders(
                 <UsersList state={mockState} title="Test Users" />
             )
 
             // Spinner should be visible in header
-            const spinners = screen.queryAllByRole('img', { hidden: true })
-            expect(spinners.length).toBeGreaterThan(0)
+            const spinner = container.querySelector('.spinner')
+            expect(spinner).toBeInTheDocument()
         })
     })
 
@@ -193,7 +193,9 @@ describe('UsersList Component', () => {
                 <UsersList state={mockState} title="Test Users" />
             )
 
-            expect(screen.getByText('Create User')).toBeInTheDocument()
+            const dialog = screen.getByRole('dialog')
+            expect(dialog).toBeInTheDocument()
+            expect(screen.getByRole('heading', { name: 'Create User' })).toBeInTheDocument()
         })
 
         it('should render edit modal when open with user', () => {
@@ -208,7 +210,9 @@ describe('UsersList Component', () => {
                 <UsersList state={mockState} title="Test Users" />
             )
 
-            expect(screen.getByText('Edit User')).toBeInTheDocument()
+            const dialog = screen.getByRole('dialog')
+            expect(dialog).toBeInTheDocument()
+            expect(screen.getByRole('heading', { name: 'Edit User' })).toBeInTheDocument()
         })
 
         it('should call updateFormField when input changes', () => {
@@ -245,12 +249,14 @@ describe('UsersList Component', () => {
             mockState.isModalOpen = true
             mockState.formData = { name: 'Test', email: 'test@test.com' }
 
-            renderWithProviders(
+            const { container } = renderWithProviders(
                 <UsersList state={mockState} title="Test Users" />
             )
 
-            const form = screen.getByRole('form')
-            fireEvent.submit(form)
+            const form = container.querySelector('form')
+            if (form) {
+                fireEvent.submit(form)
+            }
 
             await waitFor(() => {
                 expect(mockState.submitForm).toHaveBeenCalled()

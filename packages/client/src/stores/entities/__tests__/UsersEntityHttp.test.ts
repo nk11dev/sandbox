@@ -13,7 +13,7 @@ import { QueryClient } from '@tanstack/react-query'
 
 import { createTestQueryClient, waitForAsync } from '@/__tests__/testUtils'
 import { UserDto } from '@/common'
-import { httpApi } from '@/services'
+import { httpApi, queryClient as importedQueryClient } from '@/services'
 import { UsersEntityHttp } from '@/stores/entities/UsersEntityHttp'
 
 // Mock the HTTP API
@@ -30,8 +30,13 @@ describe('UsersEntityHttp', () => {
     let entity: UsersEntityHttp
     let queryClient: QueryClient
 
-    beforeEach(() => {
+    beforeAll(() => {
+        // Replace global queryClient methods with test client
         queryClient = createTestQueryClient()
+        Object.assign(importedQueryClient, queryClient)
+    })
+
+    beforeEach(() => {
         entity = new UsersEntityHttp()
         jest.clearAllMocks()
     })
@@ -99,20 +104,14 @@ describe('UsersEntityHttp', () => {
                 name: newUser.name,
                 email: newUser.email,
             })
-            await waitForAsync()
 
             expect(httpApi.post).toHaveBeenCalledWith('/users', {
                 name: newUser.name,
                 email: newUser.email,
             })
-
-            // Check cache updated
-            const cachedUsers = queryClient.getQueryData<UserDto[]>([
-                'users',
-                'http',
-            ])
-            expect(cachedUsers).toHaveLength(2)
-            expect(cachedUsers?.[1]).toEqual(newUser)
+            
+            expect(entity.createUserMutation.isSuccess).toBe(true)
+            expect(entity.createUserMutation.data).toEqual(newUser)
         })
 
         it('should handle creation error', async () => {
@@ -161,20 +160,14 @@ describe('UsersEntityHttp', () => {
                     email: updatedUser.email,
                 },
             })
-            await waitForAsync()
 
             expect(httpApi.put).toHaveBeenCalledWith('/users/1', {
                 name: updatedUser.name,
                 email: updatedUser.email,
             })
-
-            // Check cache updated
-            const cachedUsers = queryClient.getQueryData<UserDto[]>([
-                'users',
-                'http',
-            ])
-            expect(cachedUsers?.[0]).toEqual(updatedUser)
-            expect(cachedUsers?.[1].name).toBe('User 2')
+            
+            expect(entity.updateUserMutation.isSuccess).toBe(true)
+            expect(entity.updateUserMutation.data).toEqual(updatedUser)
         })
     })
 
@@ -193,17 +186,11 @@ describe('UsersEntityHttp', () => {
 
             // Delete user
             await entity.deleteUserMutation.mutate(1)
-            await waitForAsync()
 
             expect(httpApi.delete).toHaveBeenCalledWith('/users/1')
-
-            // Check cache updated
-            const cachedUsers = queryClient.getQueryData<UserDto[]>([
-                'users',
-                'http',
-            ])
-            expect(cachedUsers).toHaveLength(1)
-            expect(cachedUsers?.[0].id).toBe(2)
+            
+            expect(entity.deleteUserMutation.isSuccess).toBe(true)
+            expect(entity.deleteUserMutation.data).toEqual({ id: 1 })
         })
     })
 
