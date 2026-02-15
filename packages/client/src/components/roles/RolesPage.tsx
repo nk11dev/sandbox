@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react'
 import { useMemo } from 'react'
 
 import { RolesListStateHttp, RolesListStateWebSocket } from '@/stores'

@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react'
 import { Link, useLocation } from 'react-router-dom'
 
 import './Header.css'

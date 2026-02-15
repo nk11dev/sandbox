@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react'
 import { Outlet } from 'react-router-dom'
 
 import { Breadcrumbs } from './Breadcrumbs'

@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 
 import { groupsEntityHttp } from '@/stores'

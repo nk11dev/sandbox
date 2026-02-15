@@ -1,3 +1,5 @@
+import { observer } from 'mobx-react'
+
 import './Input.css'
 
 interface InputProps {

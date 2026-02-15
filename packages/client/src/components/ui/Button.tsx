@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { observer } from 'mobx-react'
 
 import './Button.css'
 
