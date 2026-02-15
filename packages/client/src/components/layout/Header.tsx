@@ -5,7 +5,7 @@ import './Header.css'
 /**
  * Application header with navigation.
  */
-export function Header() {
+export const Header = observer(function Header() {
     const location = useLocation()
 
     const isActive = (path: string) => location.pathname === path
@@ -43,4 +43,4 @@ export function Header() {
             </nav>
         </header>
     )
-}
+})

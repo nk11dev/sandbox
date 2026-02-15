@@ -8,9 +8,9 @@ import './Breadcrumbs.css'
  * Breadcrumbs component for navigation.
  * Displays path from Home to current page with links.
  */
-export function Breadcrumbs() {
+export const Breadcrumbs = observer(function Breadcrumbs() {
     const location = useLocation()
-    const params = useParams<{ id: string }>()
+    const _params = useParams<{ id: string }>()
     
     const pathSegments = location.pathname.split('/').filter(Boolean)
     
@@ -28,7 +28,7 @@ export function Breadcrumbs() {
         const path = `/${pathSegments.slice(0, index + 1).join('/')}`
         
         // Capitalize first letter
-        let label = segment.charAt(0).toUpperCase() + segment.slice(1)
+        const label = segment.charAt(0).toUpperCase() + segment.slice(1)
         
         // Special handling for group profile page
         if (segment === 'groups' && pathSegments[index + 1]) {
@@ -90,4 +90,4 @@ export function Breadcrumbs() {
             ))}
         </nav>
     )
-}
+})

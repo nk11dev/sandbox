@@ -1,8 +1,8 @@
 import { action, computed, makeObservable, observable } from 'mobx'
 
 import { GroupDto, GroupId, UserDto, UserId, AccessDto } from '@/common'
-import { groupsEntityHttp } from '@/stores/entities/GroupsEntityHttp'
 import { accessEntityHttp } from '@/stores/entities/AccessEntityHttp'
+import { groupsEntityHttp } from '@/stores/entities/GroupsEntityHttp'
 import { usersEntityHttp } from '@/stores/entities/UsersEntityHttp'
 
 /**

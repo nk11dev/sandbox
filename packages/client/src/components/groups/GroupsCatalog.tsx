@@ -139,10 +139,14 @@ export const GroupsCatalog = observer(({ state, availableRoles }: GroupsCatalogP
                     />
                     
                     <div style={{ marginTop: '16px' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>
+                        <label 
+                            htmlFor="group-roles-select"
+                            style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}
+                        >
                             Roles
                         </label>
                         <select
+                            id="group-roles-select"
                             multiple
                             value={state.groupFormData.roles.map(String)}
                             onChange={(e) => {

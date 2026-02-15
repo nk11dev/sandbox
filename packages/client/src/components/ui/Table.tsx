@@ -15,7 +15,7 @@ interface TableProps<T> {
 /**
  * Reusable Table component with type-safe columns.
  */
-export function Table<T>({ columns, data, keyExtractor }: TableProps<T>) {
+export const Table = observer(function Table<T>({ columns, data, keyExtractor }: TableProps<T>) {
     return (
         <div className="table-container">
             <table className="table">
@@ -48,4 +48,4 @@ export function Table<T>({ columns, data, keyExtractor }: TableProps<T>) {
             </table>
         </div>
     )
-}
+})

@@ -9,14 +9,14 @@ import { UsersPage } from './users/UsersPage'
 /**
  * Placeholder page for routes not yet implemented.
  */
-function PlaceholderPage({ title }: { title: string }) {
+const PlaceholderPage = observer(function PlaceholderPage({ title }: { title: string }) {
     return (
         <div style={{ textAlign: 'center', padding: '40px' }}>
             <h1>{title}</h1>
             <p className="text-secondary">This page is not found.</p>
         </div>
     )
-}
+})
 
 /**
  * Main App component with routing.
@@ -24,7 +24,7 @@ function PlaceholderPage({ title }: { title: string }) {
  * All pages demonstrate MobX + TanStack Query integration
  * with HTTP and WebSocket transports.
  */
-export function App() {
+export const App = observer(function App() {
     return (
         <Router>
             <Routes>
@@ -42,4 +42,4 @@ export function App() {
             </Routes>
         </Router>
     )
-}
+})

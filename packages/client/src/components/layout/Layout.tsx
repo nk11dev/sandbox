@@ -8,7 +8,7 @@ import './Layout.css'
 /**
  * Main layout component with header, breadcrumbs, content area, and footer.
  */
-export function Layout() {
+export const Layout = observer(function Layout() {
     return (
         <div className="layout">
             <Header />
@@ -19,4 +19,4 @@ export function Layout() {
             <Footer />
         </div>
     )
-}
+})

@@ -12,7 +12,7 @@ interface InputProps {
 /**
  * Reusable Input component with label.
  */
-export function Input({
+export const Input = observer(function Input({
     label,
     value,
     onChange,
@@ -38,4 +38,4 @@ export function Input({
             />
         </div>
     )
-}
+})

@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react'
 import { observer } from 'mobx-react'
+import { useEffect, useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
@@ -104,10 +104,14 @@ export const GroupProfilePage = observer(() => {
                 />
 
                 <div className="group-profile-page__field">
-                    <label className="group-profile-page__label">
+                    <label 
+                        htmlFor="roles-select"
+                        className="group-profile-page__label"
+                    >
                         Roles *
                     </label>
                     <select
+                        id="roles-select"
                         multiple
                         value={state.formData.roles.map(String)}
                         onChange={(e) => {

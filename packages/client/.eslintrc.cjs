@@ -40,14 +40,39 @@ module.exports = {
         },
     },
     rules: {
+        // Code Style - No semicolons
         'semi': ['error', 'never'],
-        'quotes': ['error', 'single'],
-        'indent': ['error', 4],
-        'max-len': ['error', { code: 100 }],
+        
+        // Code Style - Single quotes
+        'quotes': ['error', 'single', { avoidEscape: true }],
+        
+        // Code Style - 4-space indentation
+        'indent': ['error', 4, { SwitchCase: 1 }],
+        
+        // Code Style - Max line length 100
+        'max-len': ['error', { 
+            code: 100,
+            ignoreStrings: true,
+            ignoreTemplateLiterals: true,
+            ignoreComments: true,
+            ignoreUrls: true,
+        }],
+        
+        // React - No React import needed in React 18
         'react/react-in-jsx-scope': 'off',
         'react/prop-types': 'off',
-        '@typescript-eslint/no-explicit-any': 'error',
+        
+        // React - Self-closing tags
+        'react/self-closing-comp': ['error', {
+            component: true,
+            html: true,
+        }],
+        
+        // Best Practices - Avoid any/unknown
+        '@typescript-eslint/no-explicit-any': 'warn',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
+        
+        // Best Practices - No unused vars/imports
         '@typescript-eslint/no-unused-vars': 'off',
         'unused-imports/no-unused-imports': 'error',
         'unused-imports/no-unused-vars': [
@@ -59,6 +84,12 @@ module.exports = {
                 argsIgnorePattern: '^_',
             },
         ],
+        
+        // Best Practices - No empty constructors
+        'no-useless-constructor': 'error',
+        '@typescript-eslint/no-useless-constructor': 'error',
+        
+        // Best Practices - Import order
         'import/order': [
             'error',
             {
@@ -68,14 +99,33 @@ module.exports = {
                     'internal',
                     ['parent', 'sibling'],
                     'index',
+                    'type',
                 ],
                 'newlines-between': 'always',
                 alphabetize: {
                     order: 'asc',
                     caseInsensitive: true,
                 },
+                pathGroups: [
+                    {
+                        pattern: '@/common/**',
+                        group: 'internal',
+                        position: 'before',
+                    },
+                    {
+                        pattern: '@/**',
+                        group: 'internal',
+                    },
+                ],
+                pathGroupsExcludedImportTypes: ['builtin'],
             },
         ],
+        
+        // Best Practices - Curly braces for if statements
+        'curly': ['error', 'all'],
+        
+        // Best Practices - Arrow functions always with parens
+        'arrow-parens': ['error', 'always'],
     },
     env: {
         browser: true,

@@ -26,7 +26,7 @@ import './RolesPage.css'
  * 4. Open two browser tabs → Changes sync across tabs in real-time
  * 5. Create/update/delete role → Groups page updates automatically (cache invalidation)
  */
-export function RolesPage() {
+export const RolesPage = observer(function RolesPage() {
     // Create state instances once using useMemo
     const httpState = useMemo(() => new RolesListStateHttp(), [])
     const wsState = useMemo(() => new RolesListStateWebSocket(), [])
@@ -41,4 +41,4 @@ export function RolesPage() {
             </div>
         </div>
     )
-}
+})

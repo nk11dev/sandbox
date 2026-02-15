@@ -14,11 +14,20 @@ import { httpApi, MobxMutation, MobxQuery, queryClient } from '@/services'
  * - Cache updates after mutations (Case 5)
  * - Complex data relationships (users ↔ groups)
  */
+type GetAllAccessQuery = MobxQuery<AccessDto[], Error, AccessDto[], AccessDto[], any>
+type GetAccessBySubjectQuery = MobxQuery<
+    AccessDto | undefined, 
+    Error, 
+    AccessDto | undefined, 
+    AccessDto | undefined, 
+    any
+>
+
 class AccessEntityHttp {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @observable getAllAccessQuery: MobxQuery<AccessDto[], Error, AccessDto[], AccessDto[], any>
+    @observable getAllAccessQuery: GetAllAccessQuery
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @observable getAccessBySubjectQuery: MobxQuery<AccessDto | undefined, Error, AccessDto | undefined, AccessDto | undefined, any>
+    @observable getAccessBySubjectQuery: GetAccessBySubjectQuery
     @observable updateAccessMutation: MobxMutation<AccessDto, Error, { subject: UserId; updates: Partial<Omit<AccessDto, 'subject'>> }>
 
     constructor() {

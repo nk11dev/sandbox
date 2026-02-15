@@ -25,7 +25,7 @@ import './UsersPage.css'
  * 3. Update user in one block → Other block syncs automatically
  * 4. Open two browser tabs → Changes sync across tabs in real-time
  */
-export function UsersPage() {
+export const UsersPage = observer(function UsersPage() {
     // Create state instances once using useMemo
     const httpState = useMemo(() => new UsersListStateHttp(), [])
     const wsState = useMemo(() => new UsersListStateWebSocket(), [])
@@ -40,4 +40,4 @@ export function UsersPage() {
             </div>
         </div>
     )
-}
+})

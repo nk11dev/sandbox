@@ -14,11 +14,20 @@ import { httpApi, MobxMutation, MobxQuery, queryClient } from '@/services'
  * - Automatic cache updates after mutations (Case 5)
  * - Cache invalidation for related queries (Case 6)
  */
+type GetAllRolesQuery = MobxQuery<RoleDto[], Error, RoleDto[], RoleDto[], any>
+type GetRoleQuery = MobxQuery<
+    RoleDto | undefined, 
+    Error, 
+    RoleDto | undefined, 
+    RoleDto | undefined, 
+    any
+>
+
 class RolesEntityHttp {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @observable getAllRolesQuery: MobxQuery<RoleDto[], Error, RoleDto[], RoleDto[], any>
+    @observable getAllRolesQuery: GetAllRolesQuery
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @observable getRoleQuery: MobxQuery<RoleDto | undefined, Error, RoleDto | undefined, RoleDto | undefined, any>
+    @observable getRoleQuery: GetRoleQuery
     @observable createRoleMutation: MobxMutation<RoleDto, Error, Omit<RoleDto, 'id'>>
     @observable updateRoleMutation: MobxMutation<RoleDto, Error, { id: RoleId; updates: Partial<Omit<RoleDto, 'id'>> }>
     @observable deleteRoleMutation: MobxMutation<{ id: RoleId }, Error, RoleId>

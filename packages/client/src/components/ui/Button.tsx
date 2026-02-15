@@ -13,7 +13,7 @@ interface ButtonProps {
 /**
  * Reusable Button component with different variants.
  */
-export function Button({
+export const Button = observer(function Button({
     children,
     onClick,
     variant = 'primary',
@@ -30,4 +30,4 @@ export function Button({
             {children}
         </button>
     )
-}
+})
