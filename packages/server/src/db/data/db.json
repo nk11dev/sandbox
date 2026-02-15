@@ -1,0 +1,86 @@
+{
+  "users": [
+    {
+      "id": 1001,
+      "name": "Ivan Ivanov",
+      "email": "ivanov@demo.com"
+    },
+    {
+      "id": 1002,
+      "name": "Petr Petrov",
+      "email": "petrov@demo.com"
+    },
+    {
+      "id": 1003,
+      "name": "Sidor Sidorov 23",
+      "email": "sidorov@demo.com"
+    }
+  ],
+  "roles": [
+    {
+      "id": 2001,
+      "name": "User"
+    },
+    {
+      "id": 2002,
+      "name": "Modeler"
+    },
+    {
+      "id": 2003,
+      "name": "Admin"
+    },
+    {
+      "id": 2004,
+      "name": "Service Admin"
+    }
+  ],
+  "groups": [
+    {
+      "id": 3001,
+      "name": "Administration",
+      "roles": [
+        2001,
+        2003,
+        2004
+      ]
+    },
+    {
+      "id": 3002,
+      "name": "Marketing",
+      "roles": [
+        2001,
+        2002
+      ]
+    },
+    {
+      "id": 3003,
+      "name": "Sales",
+      "roles": [
+        2001,
+        2003
+      ]
+    }
+  ],
+  "access": [
+    {
+      "subject": 1001,
+      "groups": [
+        3001,
+        3002,
+        3003
+      ]
+    },
+    {
+      "subject": 1002,
+      "groups": [
+        3002
+      ]
+    },
+    {
+      "subject": 1003,
+      "groups": [
+        3003
+      ]
+    }
+  ]
+}

@@ -18,10 +18,18 @@ class WebSocketApi {
                 reject(new Error(`WebSocket timeout for event: ${event}`))
             }, 10000) // 10 second timeout
 
-            ioClient.socket.emit(event, data, (response: T) => {
-                clearTimeout(timeout)
-                resolve(response)
-            })
+            // Socket.io требует разные сигнатуры в зависимости от наличия data
+            if (data !== undefined) {
+                ioClient.socket.emit(event, data, (response: T) => {
+                    clearTimeout(timeout)
+                    resolve(response)
+                })
+            } else {
+                ioClient.socket.emit(event, (response: T) => {
+                    clearTimeout(timeout)
+                    resolve(response)
+                })
+            }
         })
     }
 
