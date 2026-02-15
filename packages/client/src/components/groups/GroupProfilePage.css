@@ -1,0 +1,98 @@
+.group-profile-page {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.group-profile-page__header {
+    margin-bottom: 30px;
+}
+
+.group-profile-page__back {
+    display: inline-block;
+    color: #1976d2;
+    text-decoration: none;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.group-profile-page__back:hover {
+    text-decoration: underline;
+}
+
+.group-profile-page__title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.group-profile-page__loading,
+.group-profile-page__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 20px;
+}
+
+.group-profile-page__error {
+    color: #d32f2f;
+}
+
+.group-profile-page__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.group-profile-page__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.group-profile-page__label {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.group-profile-page__multiselect {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
+
+.group-profile-page__multiselect:focus {
+    outline: none;
+    border-color: #1976d2;
+}
+
+.group-profile-page__multiselect option {
+    padding: 4px;
+}
+
+.group-profile-page__help {
+    color: #666;
+    font-size: 12px;
+}
+
+.group-profile-page__unsaved {
+    padding: 12px;
+    background-color: #fff3e0;
+    border: 1px solid #ff9800;
+    border-radius: 4px;
+    color: #e65100;
+    font-size: 14px;
+    text-align: center;
+}
+
+.group-profile-page__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}

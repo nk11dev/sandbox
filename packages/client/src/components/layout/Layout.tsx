@@ -1,16 +1,18 @@
 import { Outlet } from 'react-router-dom'
 
+import { Breadcrumbs } from './Breadcrumbs'
 import { Footer } from './Footer'
 import { Header } from './Header'
 import './Layout.css'
 
 /**
- * Main layout component with header, content area, and footer.
+ * Main layout component with header, breadcrumbs, content area, and footer.
  */
 export function Layout() {
     return (
         <div className="layout">
             <Header />
+            <Breadcrumbs />
             <main className="layout__content">
                 <Outlet />
             </main>

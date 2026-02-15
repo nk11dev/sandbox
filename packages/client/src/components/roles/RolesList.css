@@ -1,0 +1,55 @@
+.roles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.roles-list__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.roles-list__title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.roles-list__title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.roles-list__actions {
+    display: flex;
+    gap: 12px;
+}
+
+.roles-list__loading,
+.roles-list__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    gap: 12px;
+}
+
+.roles-list__error {
+    color: #d32f2f;
+}
+
+.roles-list__actions {
+    display: flex;
+    gap: 8px;
+}
+
+.roles-list__modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}

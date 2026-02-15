@@ -1,0 +1,11 @@
+.groups-page {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 20px;
+}
+
+.groups-page__section {
+    display: flex;
+    flex-direction: column;
+}

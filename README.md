@@ -40,11 +40,53 @@ Server will serve both API and static client files at http://localhost:5000
 sandbox/
 ├── packages/
 │   ├── common/          # Shared types and utilities
+│   │   ├── types/       # UserDto, RoleDto, GroupDto, AccessDto
+│   │   └── utils/       # ApiResponse type
 │   ├── server/          # Express + Socket.io backend
+│   │   ├── controllers/ # CRUD handlers for all entities
+│   │   ├── db/          # LowDB with JSON storage
+│   │   └── routes/      # HTTP REST + WebSocket handlers
 │   └── client/          # React + MobX + TanStack Query frontend
+│       ├── services/    # HttpApi, WebSocketApi, MobxQuery, MobxMutation
+│       ├── stores/      # Entity and State stores
+│       │   ├── entities/  # Data layer (Users, Roles, Groups, Access)
+│       │   └── state/     # Business logic layer
+│       └── components/  # React UI components
+│           ├── users/     # Users page (HTTP + WebSocket)
+│           ├── roles/     # Roles page (HTTP + WebSocket)
+│           ├── groups/    # Groups catalog + Access matrix
+│           └── layout/    # Header, Footer, Breadcrumbs
 ├── .env.defaults        # Default environment variables
 └── package.json         # Root workspace configuration
 ```
+
+## 📄 Implemented Pages
+
+### Users Page (`/users`)
+- Side-by-side HTTP and WebSocket implementations
+- CRUD operations for users
+- Real-time sync between both blocks
+- **Demonstrates:** Cases 1, 2, 3, 4, 5, 6
+
+### Roles Page (`/roles`)
+- Side-by-side HTTP and WebSocket implementations
+- CRUD operations for roles
+- Real-time sync between both blocks
+- Cross-entity invalidation (roles → groups)
+- **Demonstrates:** Cases 1, 2, 3, 4, 5, 6
+
+### Groups Page (`/groups`)
+- **Groups Catalog:** CRUD with role multiselect
+- **Access Matrix:** User-group permissions with checkboxes
+- Real-time search filtering (cache-based, no API calls)
+- Automatic updates when groups/users change
+- **Demonstrates:** All cases + advanced patterns
+
+### Group Profile Page (`/groups/:id`)
+- Edit single group with role multiselect
+- Cache-first data loading
+- Unsaved changes detection
+- **Demonstrates:** Cases 1, 4, 5
 
 ## 🎯 Key Features
 
@@ -52,45 +94,95 @@ sandbox/
 - Entity stores using `MobxQuery` for reactive data fetching
 - Automatic cache updates via `MobxMutation`
 - TypeScript type safety throughout the chain
-- See: `UsersEntityHttp.ts`, `UsersListStateHttp.ts`
+- **Implemented in:** Users, Roles, Groups, Access entities
 
 ### Case 2: MobX + TanStack Query + WebSocket
 - Same pattern as HTTP but with Socket.io transport
 - Real-time updates via WebSocket events
 - Automatic cache invalidation on events
-- See: `UsersEntityWebSocket.ts`, `UsersListStateWebSocket.ts`
+- **Implemented in:** Users, Roles entities (Groups and Access ready)
 
 ### Case 3: Transport-Agnostic Components
-- Single `UsersList` component works with both transports
+- Single component works with both HTTP and WebSocket
 - Dependency injection via state prop
 - Interface-based polymorphism
-- See: `UsersList.tsx`
+- **Implemented in:** `UsersList.tsx`, `RolesList.tsx`
 
 ### Cases 4-6: Mutations and Caching
 - **Case 4**: Optimistic updates with `onSuccess` callbacks
-- **Case 5**: Reading from cache with `queryClient.setQueryData`
-- **Case 6**: Cache invalidation with `invalidateQueries`
+- **Case 5**: Reading from cache without additional requests
+- **Case 6**: Cross-entity cache invalidation chains
+
+### Advanced Patterns
+- **Multi-Entity State**: `GroupsPageState` combines 4 entity stores
+- **Cache-First Loading**: Check cache before server requests
+- **Real-Time Search**: Filter cached data without API calls
+- **Collaborative Editing**: Access matrix with real-time sync
+- **Cross-Entity Dependencies**: Roles → Groups → Access invalidation chain
 
 ## 🧪 Testing the Integration
 
 ### Scenario 1: HTTP to WebSocket Sync
 
-1. Open http://localhost:3000/users
-2. Create a user via "Users by HTTP" block
-3. ✅ Both blocks update automatically (HTTP mutation triggers WS event)
+**Page:** Users or Roles
+1. Open page in browser
+2. Create item via "HTTP" block
+3. ✅ Both HTTP and WebSocket blocks update automatically
 
 ### Scenario 2: Real-Time Updates
 
-1. Open http://localhost:3000/users in two browser tabs
-2. Create/update/delete user in any tab
+**Page:** Users or Roles
+1. Open page in two browser tabs
+2. Create/update/delete item in any tab
 3. ✅ Changes appear in both tabs instantly
 
 ### Scenario 3: Transport Independence
 
-1. Compare code between `UsersEntityHttp` and `UsersEntityWebSocket`
-2. Compare `UsersListStateHttp` and `UsersListStateWebSocket`
-3. ✅ Same patterns, different transport implementation
-4. ✅ `UsersList` component is completely transport-agnostic
+**Implementation:**
+1. Compare `UsersEntityHttp` vs `UsersEntityWebSocket`
+2. Compare `UsersListStateHttp` vs `UsersListStateWebSocket`
+3. ✅ Same patterns, different transport
+4. ✅ `UsersList` component is transport-agnostic
+
+### Scenario 4: Cross-Entity Cache Invalidation
+
+**Page:** Groups
+1. Create a role on Roles page
+2. Go to Groups page → Create group with that role
+3. Delete the role on Roles page
+4. ✅ Groups page automatically refetches (cache invalidation)
+
+### Scenario 5: Cache-First Loading
+
+**Page:** Group Profile
+1. Visit Groups page (groups cached)
+2. Click on group name to open profile
+3. ✅ Group data loads instantly from cache
+4. Check console logs for "Found in cache" message
+
+### Scenario 6: Real-Time Search Without Requests
+
+**Page:** Groups (Access Matrix)
+1. Type user name in search field
+2. ✅ Matrix filters instantly without API calls
+3. Clear search
+4. ✅ Full matrix appears instantly (from cache)
+
+### Scenario 7: Collaborative Access Matrix
+
+**Page:** Groups (Access Matrix)
+1. Open Groups page in two browser tabs
+2. Toggle access checkbox in first tab
+3. ✅ Second tab updates automatically in real-time
+4. Check console for WebSocket events
+
+### Scenario 8: Multi-Entity State Management
+
+**Page:** Groups
+1. Create/delete groups in catalog (top)
+2. ✅ Access matrix (bottom) columns update automatically
+3. Create/delete users on Users page
+4. ✅ Access matrix rows update automatically
 
 ## 📚 Architecture
 

@@ -1,0 +1,38 @@
+.breadcrumbs {
+    padding: 12px 20px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+}
+
+.breadcrumbs__item {
+    display: inline;
+}
+
+.breadcrumbs__link {
+    color: #1976d2;
+    text-decoration: none;
+}
+
+.breadcrumbs__link:hover {
+    text-decoration: underline;
+}
+
+.breadcrumbs__link--active {
+    font-weight: 500;
+    color: #333;
+}
+
+.breadcrumbs__text {
+    color: #666;
+}
+
+.breadcrumbs__text--current {
+    font-weight: 500;
+    color: #333;
+}
+
+.breadcrumbs__separator {
+    margin: 0 8px;
+    color: #999;
+}

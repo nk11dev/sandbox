@@ -149,9 +149,11 @@ constructor() {
 - Cache updates after mutations
 - Type-safe request/response handling
 
-**Files:**
-- `UsersEntityHttp.ts` - Entity with HTTP queries/mutations
-- `UsersListStateHttp.ts` - State with UI logic
+**Implemented in:**
+- `UsersEntityHttp.ts` + `UsersListStateHttp.ts`
+- `RolesEntityHttp.ts` + `RolesListStateHttp.ts`
+- `GroupsEntityHttp.ts` + `GroupsPageState.ts`
+- `AccessEntityHttp.ts` + `GroupsPageState.ts`
 
 ### Case 2: WebSocket Entity + State
 
@@ -160,9 +162,11 @@ constructor() {
 - Real-time updates via event listeners
 - Automatic cache invalidation
 
-**Files:**
-- `UsersEntityWebSocket.ts` - Entity with WebSocket queries/mutations
-- `UsersListStateWebSocket.ts` - State with UI logic
+**Implemented in:**
+- `UsersEntityWebSocket.ts` + `UsersListStateWebSocket.ts`
+- `RolesEntityWebSocket.ts` + `RolesListStateWebSocket.ts`
+- `GroupsEntityWebSocket.ts` (ready for use)
+- `AccessEntityWebSocket.ts` (ready for use)
 
 ### Case 3: Universal Component
 
@@ -171,7 +175,11 @@ constructor() {
 - Dependency injection pattern
 - Single component for multiple transports
 
-**Interface:**
+**Implemented in:**
+- `UsersList.tsx` - Works with both HTTP and WebSocket states
+- `RolesList.tsx` - Works with both HTTP and WebSocket states
+
+**Interface Example:**
 
 ```typescript
 interface IUsersListState {
@@ -252,6 +260,173 @@ onSuccess: () => {
 socket.on('users:created', () => {
     queryClient.invalidateQueries({ queryKey: ['users', 'websocket'] })
 })
+```
+
+**Advanced Example: Cross-Entity Invalidation**
+
+Demonstrated in `GroupsEntityHttp.ts`:
+```typescript
+// When a group is deleted, access matrix must update
+deleteGroupMutation: new MobxMutation(() => ({
+    mutationFn: this.deleteGroupFn,
+    onSuccess: (data) => {
+        // Update groups cache
+        queryClient.setQueryData<GroupDto[]>(['groups', 'http'], ...)
+        
+        // Invalidate access matrix (Case 6)
+        queryClient.invalidateQueries({ queryKey: ['access'] })
+    },
+}))
+```
+
+When roles are modified, groups that reference those roles automatically
+update via cache invalidation chain.
+
+## Advanced Integration Patterns
+
+### Multi-Entity State Management
+
+**Demonstrated in:** `GroupsPageState.ts`
+
+The Groups page combines multiple entity stores:
+- `groupsEntityHttp` - Groups CRUD
+- `accessEntityHttp` - Access matrix
+- `usersEntityHttp` - User list for matrix
+- `rolesEntityHttp` - Roles for multiselect
+
+```typescript
+export class GroupsPageState {
+    @computed get groups(): GroupDto[] {
+        return groupsEntityHttp.getAllGroupsQuery.data || []
+    }
+    
+    @computed get users(): UserDto[] {
+        return usersEntityHttp.getAllUsersQuery.data || []
+    }
+    
+    @computed get accessRecords(): AccessDto[] {
+        return accessEntityHttp.getAllAccessQuery.data || []
+    }
+}
+```
+
+### Cache-First Data Loading
+
+**Demonstrated in:** `GroupsEntityHttp.getGroupById()`
+
+Before making a server request, check cache first:
+
+```typescript
+getGroupById = async (id: GroupId): Promise<GroupDto | undefined> => {
+    // Try cache first (Case 5)
+    const cachedGroups = queryClient.getQueryData<GroupDto[]>(['groups', 'http'])
+    const cachedGroup = cachedGroups?.find((g) => g.id === id)
+    
+    if (cachedGroup) {
+        console.log(`✓ Found in cache: ${id}`)
+        return cachedGroup
+    }
+    
+    // Fetch from server only if not cached
+    const response = await httpApi.get<ApiResponse<GroupDto>>(`/groups/${id}`)
+    return response.data
+}
+```
+
+### Real-Time Search Without Requests
+
+**Demonstrated in:** `GroupsPageState.filteredUsers`
+
+Search is implemented using computed properties on cached data:
+
+```typescript
+@computed get filteredUsers(): UserDto[] {
+    if (!this.searchQuery.trim()) {
+        return this.users // All data from cache
+    }
+    
+    const terms = this.searchQuery.toLowerCase().split(' ').filter((t) => t.length > 0)
+    
+    return this.users.filter((user) => {
+        const userName = user.name.toLowerCase()
+        const userEmail = user.email.toLowerCase()
+        
+        return terms.every((term) => userName.includes(term) || userEmail.includes(term))
+    })
+}
+```
+
+No API calls needed - instant filtering!
+
+### Cross-Entity Cache Invalidation
+
+**Demonstrated in:** Role/Group relationship
+
+When roles are modified, groups automatically update:
+
+```typescript
+// In RolesEntityHttp
+deleteRoleMutation: new MobxMutation(() => ({
+    mutationFn: this.deleteRoleFn,
+    onSuccess: (data) => {
+        // Update roles cache
+        queryClient.setQueryData<RoleDto[]>(['roles', 'http'], ...)
+        
+        // Invalidate groups (Case 6)
+        queryClient.invalidateQueries({ queryKey: ['groups'] })
+    },
+}))
+```
+
+Similarly, when groups are modified, access matrix updates:
+
+```typescript
+// In GroupsEntityHttp
+deleteGroupMutation: new MobxMutation(() => ({
+    mutationFn: this.deleteGroupFn,
+    onSuccess: (data) => {
+        // Update groups cache
+        queryClient.setQueryData<GroupDto[]>(['groups', 'http'], ...)
+        
+        // Invalidate access (Case 6)
+        queryClient.invalidateQueries({ queryKey: ['access'] })
+    },
+}))
+```
+
+**Dependency Chain:**
+```
+Roles → Groups → Access
+  ↓       ↓        ↓
+Cache invalidation propagates automatically
+```
+
+### Collaborative Access Matrix
+
+**Demonstrated in:** `GroupsAccess.tsx` + `GroupsPageState.ts`
+
+Real-time collaborative editing:
+
+1. User A toggles access checkbox
+2. Mutation updates cache immediately (Case 5)
+3. Server broadcasts WebSocket event
+4. User B's access matrix updates automatically (Case 2 + 6)
+
+```typescript
+@action async toggleAccess(userId: UserId, groupId: GroupId) {
+    const access = this.accessRecords.find((a) => a.subject === userId)
+    
+    const hasAccess = access.groups.includes(groupId)
+    const updatedGroups = hasAccess
+        ? access.groups.filter((g) => g !== groupId)
+        : [...access.groups, groupId]
+    
+    // Mutation with immediate cache update
+    await accessEntityHttp.updateAccessMutation.mutate({
+        subject: userId,
+        updates: { groups: updatedGroups },
+    })
+}
 ```
 
 ## Best Practices
